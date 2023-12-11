@@ -1,0 +1,16 @@
+<head>
+
+
+  <title>Instancias</title>
+</head>
+<div class="homePage">
+
+  <body>
+    <div *ngIf="isAuthenticated()" style="align-items: center; justify-content: center;">
+      <a type="button" class="btn btn-secondary" (click)="criarInstancia()" [routerLink]="['/conexao-lista']">Nova Instancia</a>
+    </div>
+    <div *ngIf="!isAuthenticated()" style="align-items: center; justify-content: center;">
+      <a type="button" class="btn btn-secondary" [routerLink]="['/login']">Login</a>
+    </div>
+  </body>
+</div>

@@ -1,0 +1,102 @@
+.mensagemForm
+  display: flex
+  justify-content: center
+  align-items: center
+  position: absolute
+  bottom: 0
+  left: 0
+  right: 0
+  margin: 3vh auto
+
+
+.botoes
+  margin: 25px
+  border-radius: 50%
+
+.mensagemArea
+  resize: none 
+  width: 500px
+  border: 1px solid #000
+
+.mensagemInput
+  height: auto
+  width: 100%
+  
+.botaoPesquisar
+  border: none
+  background: none
+  font-size: 20px
+
+.contatos 
+  background-color: light-grey
+  display: inline-block 
+  width: 100%
+  border-radius: 5px
+  padding: 10px
+    
+  &.selected
+    background-color: grey 
+
+
+ 
+
+#checkboxes input[type=checkbox] 
+  display: none 
+ 
+
+#checkboxes input[type=checkbox]:checked + .contatos 
+  background:#fff
+  //background:#c5ccd4  
+
+
+
+
+.mat-drawer 
+  width: 25%
+  height: 100vh
+  box-sizing: border-box
+
+
+.mat-drawer-content 
+  height: 94vh
+  margin-left: 30%
+  box-sizing: border-box
+  background-color: rgba(179, 179, 179, 0.212)
+
+.msgsEnvRec
+  width: 100vh
+  max-height: 75%
+  overflow: auto
+  word-wrap: break-word
+  
+.msgsEnvRec::-webkit-scrollbar
+  width: 5px
+  background: #6b6b6b 
+
+.msgsEnvRec::-webkit-scrollbar-track
+  background:  #d4cece
+
+.msgsEnvRec::-webkit-scrollbar-thumb
+  background-color:  #242323   
+  border-radius: 10px       
+  border: 3px solid #6b6b6b 
+
+
+.msgEnviada  
+  border: 2px solid #dedede 
+  background-color: #f1f1f1 
+  border-radius: 10px 
+  padding: 10px 
+  width: 50%
+  margin: 10px 0 
+
+.darker  
+  border-color: #ccc 
+  background-color: #d4cece 
+  left: 1
+  right: 0
+  margin-right: 30px
+  float: right
+  margin-left: 20px
+  margin-right: 30px
+ 

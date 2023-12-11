@@ -1,0 +1,22 @@
+<div *ngIf="!isAuthenticated()" class="formLogin">
+    <div class="col-4">
+        <form>
+            <div class="row mb-3">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Login</label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" name="email"  [(ngModel)]="usuario.login">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="inputPassword3" class="col-sm-2 col-form-label">Senha</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" name="senha"  [(ngModel)]="usuario.senha">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" (click)="entrar()" [routerLink]="['/conexao-lista']">Entrar</button>
+        </form>
+    </div>
+</div>
+<div *ngIf="isAuthenticated()" [routerLink]="['/conexao-lista']" class="listConexoesButton">
+    <button type="submit" class="btn btn-primary" [routerLink]="['/conexao-lista']">Lista de Conexões</button>
+</div>

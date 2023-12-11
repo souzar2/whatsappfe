@@ -1,0 +1,48 @@
+<head>
+ 
+
+  <title>Instancias</title>
+</head>
+<div class="listaInstancias">
+<body>
+  <div style="align-items: center; justify-content: center;">
+
+   
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Nome da Instancia</th>
+          <th scope="col">status</th>
+          <th scope="col">apikey</th>
+          <th scope="col">Conectar</th>
+          <th scope="col">Excluir</th>
+          <th scope="col">Logout</th>
+          <th scope="col">Enviar mensagem</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let instance of instances; index as i">
+          <td>{{instance.instance.instanceName}}</td>
+          <td>{{instance.instance.status}}</td>
+          <td>{{instance.instance.apikey}}</td>
+          <td>
+            <button type="button" class="btn btn-success"[disabled]="instance.instance.status == 'open'"
+            (click)="reconectarInstancia(instance.instance.instanceName, instance.instance.status)"
+            >Conectar</button>
+          </td>
+          <td><button type="button" class="btn btn-danger" [disabled]="instance.instance.status == 'open'"
+              (click)="removerInstancia(instance.instance.instanceName)">Excluir</button></td>
+              <td><button type="button" class="btn btn-danger" [disabled]="instance.instance.status != 'open'"
+                (click)="desconectarInstancia(instance.instance)">Desconectar</button></td>
+                <td><button type="button" class="btn btn-warning" [disabled]="instance.instance.status != 'open'"
+                  (click)="redirecionarMensagem(i)">Enviar Mensagem por essa instancia</button></td>
+        </tr>
+      </tbody>
+    </table>
+    
+  </div>
+
+ 
+</body>
+</div>

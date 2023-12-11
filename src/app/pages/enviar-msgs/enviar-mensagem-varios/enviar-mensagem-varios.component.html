@@ -1,0 +1,23 @@
+
+        
+        <div class="msgsEnvRec">
+            <p>Mensagem para Vários Contatos</p>
+            <div *ngFor="let msgs of msgsEnviadas; index as i" class="msgEnviada darker">
+                <p>{{msgsEnviadas.at(i)}}</p>
+                <span class="time-right">11:01</span>
+            </div>
+        </div>
+
+        <div class="mensagemInput">
+            <form action="" class="mensagemForm">
+                <textarea class="form-control mensagemArea"
+                    oninput='if(this.scrollHeight > this.offsetHeight) this.rows += 1' type="text" name="mensagem"
+                    [(ngModel)]="mensagem.textMessage.text"></textarea>
+
+                    <button [disabled]="nenhumContatoSelecionado()" type="button" class="btn btn-outline-dark botoes"
+                            (click)="enviarVariasMensagemTexto()">
+                      <i class="bi bi-send-fill" style="font-size: 25px"></i>
+                    </button>
+               
+            </form>
+        </div>
