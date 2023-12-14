@@ -72,6 +72,18 @@ export class ConexaoComponent implements OnInit {
     )
   }
 
+  /* this.InstanceService.reconectarQrCode(this.instance.instanceName).subscribe({
+      next: (response) => {
+        this.qrcode = response.base64
+        console.log(this.qrcode)
+        this.isLoading = false;
+      },
+      error: err => {
+        console.log("Erro ao reconectar instancia", err)
+        this.isLoading = false;
+      }
+    })* */
+
   
 
 

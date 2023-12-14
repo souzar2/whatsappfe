@@ -15,9 +15,13 @@ export class EnviarMensagemVariosComponent implements OnInit {
   mensagem: MessageModel = new MessageModel();
   msgsEnviadas: Array<string> = new Array();
   nomeInstancia: string;
+  
+  private imgBase64String: String = "";
+  
   @ViewChild('textareaWrapper') textareaWrapper!: ElementRef;
-  @Input() Instance: InstanceModel;
-  @Input() contatosAtivos: Array<ContatoModel> = new Array();;
+  @Input() instance: string;
+  @Input() contatosAtivos: Array<ContatoModel> = new Array();
+  @Input() contato: ContatoModel;
 
 
   constructor(private InstanceService: InstanceService, private activatedRoute: ActivatedRoute) {
@@ -76,6 +80,38 @@ export class EnviarMensagemVariosComponent implements OnInit {
     }
     this.contatosAtivos.splice(0, this.contatosAtivos.length);
   }
+
+  
+  EscolherImg(evt) {
+    var arquivoImagem = evt.target.files;
+    var arquivo = arquivoImagem[0];
+
+    if (arquivoImagem && arquivo) {
+      var reader = new FileReader();
+      reader.onload = this._handleReaderLoaded.bind(this);
+      reader.readAsBinaryString(arquivo);
+    }
+  }
+
+  _handleReaderLoaded(readerEvt) {
+    var binaryString = readerEvt.target.result;
+    this.imgBase64String = btoa(binaryString);
+    this.mensagem.mediaMessage.media = this.imgBase64String
+    this.mensagem.mediaMessage.caption = "Foto enviada"
+    this.enviarImagem()
+  }
+
+  enviarImagem() {
+    this.mensagem.number = this.setFormatoNumero(this.contato.numero);
+    this.InstanceService.enviarImgBase64(this.mensagem, this.instance).subscribe({
+      next: (response) => {
+      },
+      error: err => {
+        console.log("Erro ao enviar mensagem", err)
+      }
+    })
+  }
+
 
 
   setFormatoNumero(destinatario: String) {

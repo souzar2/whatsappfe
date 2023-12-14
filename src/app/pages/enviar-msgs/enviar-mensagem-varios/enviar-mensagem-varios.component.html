@@ -18,6 +18,13 @@
                             (click)="enviarVariasMensagemTexto()">
                       <i class="bi bi-send-fill" style="font-size: 25px"></i>
                     </button>
+                    <button  type="button" class="btn btn-outline-dark botoes">
+                        <i class="bi bi-mic-fill" style="font-size: 25px"></i>
+                    </button>
+                    <label for="filePicker" class="custom-file-upload" class="btn btn-outline-dark botoes">
+                        <i class="bi bi-card-image" style="font-size: 25px" ></i>
+                    </label>
+                    <input type="file" id="filePicker" class=" upload input"  (change)="EscolherImg($event)" >
                
             </form>
         </div>

@@ -6,8 +6,9 @@ export class ChatModel {
     text: string | undefined;
     message: any | undefined;
     messageType: string | undefined;
-    messageTimestamp: Date| undefined;
-    imagemBase64: string| undefined;
+    messageTimestamp: any | undefined;
+    thumb: string | undefined;
+    midia: string | undefined;
     
     constructor() {}
 

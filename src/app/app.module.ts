@@ -28,7 +28,7 @@ import { EnviarMensagemVariosComponent } from './pages/enviar-msgs/enviar-mensag
 import { EnviarMensagemComponent } from './pages/enviar-msgs/enviar-mensagem/enviar-mensagem.component';
 import { registerLocaleData } from '@angular/common';
 import ptBr from '@angular/common/locales/pt';
-
+import { MensagemTileComponent } from './components/mensagem-tile/mensagem-tile.component';
 
 
 //import { AuthInterceptor } from './services/authorization/AuthInterceptor';
@@ -56,6 +56,7 @@ export function tokenGetter() {
     EnviarMensagemIndividualComponent,
     EnviarMensagemComponent,
     EnviarMensagemVariosComponent,
+    MensagemTileComponent,
   ],
   imports: [
     BrowserModule,

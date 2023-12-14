@@ -36,6 +36,7 @@ export class PesquisaContatosComponent {
 
   async onValorChange() {
     this.clientesPaginados = await this.getClientes(25, this.contatoPesquisa)
+    this.pagina=0
   }
 
   /*
@@ -170,6 +171,8 @@ export class PesquisaContatosComponent {
     nomeContato = nomeContato.replaceAll(" DA ", " ");
     nomeContato = nomeContato.replaceAll(" DE ", " ");
     nomeContato = nomeContato.replaceAll(" E ", " ");
+    nomeContato = nomeContato.replaceAll(" DOS ", " ");
+    nomeContato = nomeContato.replaceAll(" DAS ", " ");
 
     if (nomeContato.length >= 40) {
       nomeContato = nomeContato.substring(0, nomeContato.lastIndexOf(" "))

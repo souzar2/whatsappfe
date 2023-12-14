@@ -13,21 +13,21 @@ import { ContatoModel } from 'src/app/models/contato.model';
 export class EnviarMensagemComponent {
   @ViewChild('textareaWrapper') textareaWrapper!: ElementRef;
 
+  nomeInstancia: string;
+
   mensagem: MessageModel = new MessageModel();
 
   contatosAtivos: Array<ContatoModel> = new Array();
   msgsEnviadas: Array<string> = new Array();
-  nomeInstancia: string;
+  
 
-  @Input() Instance: InstanceModel;
-
-  constructor(private InstanceService: InstanceService, private activatedRoute: ActivatedRoute) {
-  }
+  constructor(private InstanceService: InstanceService, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(params => {
       this.nomeInstancia = params.get("instance");
-    })
+    });
+    
     this.mensagem.start();
   }
 
@@ -110,14 +110,14 @@ export class EnviarMensagemComponent {
     else return false
   }
 
-  setWH() {
-    this.InstanceService.setWebHook(this.Instance).subscribe({
-      next: (response) => {
-        console.log(response);
-      },
-      error: err => {
-        console.log("Erro ao criar WebHook", err)
-      }
-    })
-  }
+  // setWH() {
+  //   this.InstanceService.setWebHook(this.nomeInstancia).subscribe({
+  //     next: (response) => {
+  //       console.log(response);
+  //     },
+  //     error: err => {
+  //       console.log("Erro ao criar WebHook", err)
+  //     }
+  //   })
+  // }
 }

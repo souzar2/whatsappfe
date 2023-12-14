@@ -1,33 +1,35 @@
+<div class="scrollbox">
+    <nav class="navbar navbar-light bg-light">
+        <form class="form-inline">
+            <textarea class="form-control pesquisaArea"
+                oninput='if(this.scrollHeight > this.offsetHeight) this.rows += 1' type="text" name="mensagem"
+                [(ngModel)]="contatoPesquisa" type="search" placeholder="Pesquisa" aria-label="Search"
+                id="pesquisaContatos" (input)="onValorChange()"></textarea>
+        </form>
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="selectTodos"
+                (change)="selecionarTodosContatos()">
+            <label class="form-check-label" for="selectTodos">Selecionar todos</label>
 
-<nav class="navbar navbar-light bg-light">
-    <form class="form-inline">
-       
-        <textarea class="form-control pesquisaArea" oninput='if(this.scrollHeight > this.offsetHeight) this.rows += 1'
-            type="text" name="mensagem" [(ngModel)]="contatoPesquisa" type="search" placeholder="Pesquisa"
-            aria-label="Search" id="pesquisaContatos" (input)="onValorChange()"></textarea>
-
-    </form>
-    <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="selectTodos" (change)="selecionarTodosContatos()">
-        <label class="form-check-label" for="selectTodos">Selecionar todos</label>
-
-    </div>
-    <span style="background-color: rgb(45, 45, 255);" class="badge badge-pill badge-secondary">{{contatosAtivos.length}}
-        Contatos Selecionados
-    </span>
-</nav>
-
-<div id="scroll-box" style="margin-bottom: 30px;">
-
-    <div onscroll="onScroll()" *ngFor="let cliente of clientesPaginados; index as i">
-        <div (click)="selecionarContato(i)">
-            <li *ngIf="cliente.numero.length>=8" class="list-group-item list-group-item-dark contatos"
-                [ngClass]="{'selected': numeroSelecionado(cliente)}">
-                {{mascaraNome(cliente.nome)}} -
-                {{mascaraNumero(cliente.numero)}}
-            </li>
         </div>
-    </div>
+        <span style="background-color: rgb(45, 45, 255);"
+            class="badge badge-pill badge-secondary">{{contatosAtivos.length}}
+            Contatos Selecionados
+        </span>
+    </nav>
 
-    <div appReactOnView (onView)="onBottomAlcancado()"></div>
+    <div id="scroll-box" style="margin-bottom: 30px;">
+
+        <div onscroll="onScroll()" *ngFor="let cliente of clientesPaginados; index as i">
+            <div (click)="selecionarContato(i)">
+                <div *ngIf="cliente.numero.length>=8" class="list-group-item list-group-item-dark contatos"
+                    [ngClass]="{'selected': numeroSelecionado(cliente)}">
+                    <td style="float: left;">{{mascaraNome(cliente.nome)}}</td>
+                    <td style="float: right;"> {{mascaraNumero(cliente.numero)}}</td>  
+                </div>
+            </div>
+        </div>
+
+        <div appReactOnView (onView)="onBottomAlcancado()"></div>
+    </div>
 </div>

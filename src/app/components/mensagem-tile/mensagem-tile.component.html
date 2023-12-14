@@ -1,0 +1,63 @@
+<div class="msg" [ngClass]="{'enviada': enviada}">
+    <!-- Midia -->
+    <div *ngIf="midia != undefined">
+        <ng-container *ngIf="msg.messageType == 'imageMessage'; else midiaAudio">
+            <ng-container [ngTemplateOutlet]="midiaImagem"/>
+        </ng-container>
+    </div>
+
+    <!-- ThumbNail -->
+    <div *ngIf="msg.thumb != undefined && midia == undefined">
+        <i style="margin-right: 12px; font-size: 20px;" class="bi bi-file-earmark-arrow-down-fill"></i>
+        <img  style="height: auto; width: 230px;"
+        [src]="msg.thumb"
+        alt="imgs"/>
+    </div>
+
+    <div>
+        <p *ngIf="msg.text != undefined">{{msg.text}}</p>
+    </div>
+
+    <div class="d-flex justify-content-end">
+        <span class="timedate">{{msg.messageTimestamp | date:'dd/MM/YYYY HH:mm'}}</span>
+    </div>
+</div>
+
+<ng-template #midiaImagem>
+    <i style="margin-right: 12px; font-size: 20px;" class="bi bi-file-earmark-arrow-down-fill"></i>
+    <img  style="height: auto; width: 230px;"
+    [src]="'data:image/jpg;base64,' + midia"
+    alt="imgs"/>
+</ng-template>
+
+<ng-template #midiaAudio>
+    <ng-container *ngIf="msg.messageType == 'audioMessage'; else midiaSticker">
+        <div *ngIf="msg.messageType == 'audioMessage'">
+            <audio style="width:250px;" controls="controls"  preload ="none" autobuffer="autobuffer" >
+                <source [src]="'data:audio/mp4;base64,' + midia">
+            </audio>
+        </div>
+    </ng-container>
+</ng-template>
+
+<ng-template #midiaSticker>
+    <ng-container *ngIf="msg.messageType == 'stickerMessage'">
+        <div *ngIf="msg.messageType == 'stickerMessage'">
+            <i style="margin-right: 12px; font-size: 20px;" class="bi bi-file-earmark-arrow-down-fill"></i>
+            <img  style="height: auto; width: 100px;"
+            [src]="'data:image/jpg;base64,' + midia"
+            alt="imgs"/>
+        </div>
+    </ng-container>
+</ng-template>
+
+<ng-template #midiaLocation>
+    <ng-container *ngIf="msg.messageType == 'LocationMessage'">
+        <div *ngIf="msg.messageType == 'LocationMessage'">
+            <i style="margin-right: 12px; font-size: 20px;" class="bi bi-file-earmark-arrow-down-fill"></i>
+            <img  style="height: auto; width: 100px;"
+            [src]="'data:image/jpg;base64,' + midia"
+            alt="imgs"/>
+        </div>
+    </ng-container>
+</ng-template>

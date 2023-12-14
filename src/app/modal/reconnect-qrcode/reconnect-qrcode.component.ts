@@ -26,7 +26,6 @@ export class ReconnectQrcodeComponent {
   }
 
   reconectarInstancia() {
-    console.log(this.instance);
     this.InstanceService.reconectarQrCode(this.instance.instanceName).subscribe({
       next: (response) => {
         this.qrcode = response.base64

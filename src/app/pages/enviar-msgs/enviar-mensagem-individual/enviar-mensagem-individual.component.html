@@ -1,27 +1,28 @@
 <div class="msgsEnvRec">
-    <div *ngFor="let msgs of chatSelecionado; index as i">
-        <div class="d-flex" [ngClass]="msgs.fromMe? 'justify-content-end' : undefined">
-            <div class="msgEnviada" [ngClass]="{'fromMe': msgs.fromMe === true}">
-                <p>{{msgs.text}}</p>
-                <img *ngIf="msgs.imagemBase64 != undefined" style="height: auto; width: 250px;" [src]="msgs.imagemBase64"
-                    alt="imgs" />
-                <span class="time-right">{{msgs.messageTimestamp | date:'dd/MM/YYYY HH:mm'}} </span><br>
-            </div>
+    <div *ngFor="let msg of chatSelecionado; index as i">
+        <div class="d-flex" [ngClass]="msg.fromMe? 'justify-content-end' : undefined">
+            <app-mensagem-tile class="msg" [msg]="msg" [midia]="getMidia(msg.id)" [enviada]="msg.fromMe"></app-mensagem-tile>
         </div>
     </div>
 </div>
 
+
 <div class="mensagemInput">
     <form action="" class="mensagemForm">
-        <textarea class="form-control mensagemArea" oninput='if(this.scrollHeight > this.offsetHeight) this.rows += 1'
+        <textarea class="form-control mensagemArea" oninput='if(this.scrollHeight > this.offsetHeight) this.rows += 1 '
             type="text" name="mensagem" [(ngModel)]="mensagem.textMessage.text"></textarea>
-
-        <button  [disabled]="nenhumContatoSelecionado()" type="button"
-            class="btn btn-outline-dark botoes" (click)="enviarVariasMensagemTexto()">
+        <button [disabled]="nenhumContatoSelecionado()" type="button"
+            class="btn btn-outline-dark botoes" (click)="enviarMensagemTexto()">
             <i class="bi bi-send-fill" style="font-size: 25px"></i>
         </button>
-        <button  type="button" class="btn btn-outline-dark botoes">
+        <button  type="button" class="btn btn-outline-dark botoes" (click)="gravarAudio()">
             <i class="bi bi-mic-fill" style="font-size: 25px"></i>
         </button>
+       
+        <label for="filePicker" class="custom-file-upload" class="btn btn-outline-dark botoes">
+            <i class="bi bi-card-image" style="font-size: 25px" ></i>
+        </label>
+        <input type="file" id="filePicker" class=" upload input"  (change)="EscolherImg($event)" >
+            
     </form>
 </div>

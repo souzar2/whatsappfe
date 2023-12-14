@@ -9,11 +9,11 @@
     <mat-drawer-content> 
 
         <div *ngIf="mensagemIndividual()">
-        <app-enviar-mensagem-individual [contato]="contatosAtivos[0]"></app-enviar-mensagem-individual>
+        <app-enviar-mensagem-individual [instance]="nomeInstancia" [contato]="contatosAtivos[0]"></app-enviar-mensagem-individual>
         </div>
         <div *ngIf="!mensagemIndividual()">
             <!-- <app-enviar-mensagem-individual [contatosAtivos]="contatosAtivos"></app-enviar-mensagem-individual> -->
-           <app-enviar-mensagem-varios [contatosAtivos]="contatosAtivos"></app-enviar-mensagem-varios>
+           <app-enviar-mensagem-varios [instance]="nomeInstancia" [contatosAtivos]="contatosAtivos"></app-enviar-mensagem-varios>
         </div>
     </mat-drawer-content>
 </mat-drawer-container>

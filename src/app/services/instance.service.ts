@@ -37,16 +37,33 @@ export class InstanceService {
   }
 
   enviarText(mensagem: MessageModel, instanceName: string) : Observable<any>{
-    console.log(mensagem)
     return this.http.post(`${enviroment.apiUrl}sendMessageText/${instanceName}`, mensagem, { headers: this.auth.getHeaders()});
   }
 
-  setWebHook(instancia: InstanceModel) : Observable<any>{
-    return this.http.post(`http://localhost:3000/conexao/setwebhook/wU7RnbZjkmpdZuO`,instancia,  { headers: this.auth.getHeaders()});
+  enviarImgBase64(mensagem: MessageModel, instanceName: string) : Observable<any>{
+    return this.http.post(`${enviroment.apiUrl}sendImgBase64/${instanceName}`, mensagem, { headers: this.auth.getHeaders()});
   }
 
-  getMensagens(instancia: InstanceModel) : Observable<any>{
-    return this.http.post(`http://localhost:3000/conexao/getmessages/wU7RnbZjkmpdZuO`,instancia,  { headers: this.auth.getHeaders()});
+  enviarAudioBase64(mensagem: MessageModel, instanceName: string) : Observable<any>{
+    return this.http.post(`${enviroment.apiUrl}sendVoiceAudio/${instanceName}`, mensagem, { headers: this.auth.getHeaders()});
   }
+
+  setWebHook(instancia: string) : Observable<any>{
+    return this.http.post(`${enviroment.apiUrl}setwebhook/${instancia}`, {}, { headers: this.auth.getHeaders()});
+  }
+
+  getMensagens(instancia: string) : Observable<any>{
+    return this.http.post(`${enviroment.apiUrl}getmessages/${instancia}`, {},  { headers: this.auth.getHeaders()});
+  }
+  /*
+  getMidia64(instancia: InstanceModel, id: string) : Observable<any>{
+    return this.http.post(`http://localhost:3000/conexao/getBase64MediaMessage/wU7RnbZjkmpdZuO`,instancia, { headers: this.auth.getHeaders(), "id": id});
+  }
+ */
+
+  getMidia64(instancia: string, msg: ChatModel) : Observable<any>{
+    return this.http.post(`${enviroment.apiUrl}getBase64MediaMessage/${instancia}`, msg, {headers: this.auth.getHeaders()});
+  }
+
 
 }
