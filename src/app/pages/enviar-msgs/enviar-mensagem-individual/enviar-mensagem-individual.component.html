@@ -1,7 +1,8 @@
 <div class="msgsEnvRec">
     <div *ngFor="let msg of chatSelecionado; index as i">
         <div class="d-flex" [ngClass]="msg.fromMe? 'justify-content-end' : undefined">
-            <app-mensagem-tile class="msg" [msg]="msg" [midia]="getMidia(msg.id)" [enviada]="msg.fromMe"></app-mensagem-tile>
+            <app-mensagem-tile class="msg" [msg]="msg" [midia]="getMidia(msg.id)"
+                [enviada]="msg.fromMe"></app-mensagem-tile>
         </div>
     </div>
 </div>
@@ -9,20 +10,40 @@
 
 <div class="mensagemInput">
     <form action="" class="mensagemForm">
+        <div *ngIf="mensagem.mediaMessage.media != undefined" style="margin-right: 5px;">
+            <img style="height: auto; width: 100px;" [src]="'data:image/jpg;base64,' + mensagem.mediaMessage.media"
+                alt="imgs" />
+            <button class="buttonRemoveImagem" (click)="mensagem.mediaMessage.media = undefined">
+                <i class="bi bi-trash"></i>
+            </button>
+        </div>
+
         <textarea class="form-control mensagemArea" oninput='if(this.scrollHeight > this.offsetHeight) this.rows += 1 '
-            type="text" name="mensagem" [(ngModel)]="mensagem.textMessage.text"></textarea>
-        <button [disabled]="nenhumContatoSelecionado()" type="button"
-            class="btn btn-outline-dark botoes" (click)="enviarMensagemTexto()">
+            type="text" name="mensagem" [(ngModel)]="mensagem.textMessage.text">
+        </textarea>
+
+        <button [disabled]="nenhumContatoSelecionado()" type="button" class="btn btn-outline-dark botoes"
+            (click)="enviar()">
             <i class="bi bi-send-fill" style="font-size: 25px"></i>
         </button>
-        <button  type="button" class="btn btn-outline-dark botoes" (click)="gravarAudio()">
-            <i class="bi bi-mic-fill" style="font-size: 25px"></i>
+        <button type="button" class="btn btn-outline-dark botoes" (click)="gravarAudio()">
+            <div *ngIf="gravando()" class="spinner-grow" role="status">
+                <span class="sr-only"  style="width: 10%; height: 50%;"></span>
+              </div>
+            <i *ngIf="!gravando()" class="bi bi-mic-fill" style="font-size: 25px"></i>
         </button>
-       
+
         <label for="filePicker" class="custom-file-upload" class="btn btn-outline-dark botoes">
-            <i class="bi bi-card-image" style="font-size: 25px" ></i>
-        </label>
-        <input type="file" id="filePicker" class=" upload input"  (change)="EscolherImg($event)" >
             
+            <i class="bi bi-card-image" style="font-size: 25px"></i>
+        </label>
+        <input type="file" id="filePicker" class=" upload input" (change)="EscolherImg($event)">
+
+        <label class="custom-file-upload btn btn-outline-dark botoes" data-toggle="collapse"
+            href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+            <i class="bi bi-three-dots-vertical" style="font-size: 25px"></i>
+        </label>
+       
+
     </form>
 </div>

@@ -29,6 +29,7 @@ import { EnviarMensagemComponent } from './pages/enviar-msgs/enviar-mensagem/env
 import { registerLocaleData } from '@angular/common';
 import ptBr from '@angular/common/locales/pt';
 import { MensagemTileComponent } from './components/mensagem-tile/mensagem-tile.component';
+import { ModalEnviarImagemComponent } from './modal/enviar-imagem/enviar-imagem.component';
 
 
 //import { AuthInterceptor } from './services/authorization/AuthInterceptor';
@@ -57,6 +58,7 @@ export function tokenGetter() {
     EnviarMensagemComponent,
     EnviarMensagemVariosComponent,
     MensagemTileComponent,
+    ModalEnviarImagemComponent,
   ],
   imports: [
     BrowserModule,

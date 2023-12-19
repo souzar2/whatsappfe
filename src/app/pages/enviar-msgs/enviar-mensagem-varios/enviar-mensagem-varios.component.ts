@@ -4,6 +4,8 @@ import { MessageModel } from 'src/app/models/message.model';
 import { InstanceService } from 'src/app/services/instance.service';
 import { ActivatedRoute } from '@angular/router';
 import { ContatoModel } from 'src/app/models/contato.model';
+import { ContatoFormatoService } from 'src/app/services/functions/contato.formato.service';
+import { AudioRecorderService } from '../midia.service/audio.recorder.service';
 
 @Component({
   selector: 'app-enviar-mensagem-varios',
@@ -24,7 +26,10 @@ export class EnviarMensagemVariosComponent implements OnInit {
   @Input() contato: ContatoModel;
 
 
-  constructor(private InstanceService: InstanceService, private activatedRoute: ActivatedRoute) {
+  constructor(private InstanceService: InstanceService, 
+    private AudioRecorderService: AudioRecorderService, 
+    private activatedRoute: ActivatedRoute,
+    private ContatoFormatoService: ContatoFormatoService) {
 
   }
 
@@ -33,6 +38,7 @@ export class EnviarMensagemVariosComponent implements OnInit {
       this.nomeInstancia = params.get("instance");
     })
     this.mensagem.start();
+    this.AudioRecorderService.audioConfig();
   }
 
   receberInformacao(categoria) {
@@ -70,7 +76,7 @@ export class EnviarMensagemVariosComponent implements OnInit {
     this.msgsEnviadas.push(this.mensagem.textMessage.text)
     for (let i = 0; i < this.contatosAtivos.length; i++) {
       var numero = (this.contatosAtivos.at(i).numero);
-      this.mensagem.number = (this.setFormatoNumero(numero))
+      this.mensagem.number = (this.ContatoFormatoService.setFormatoNumero(numero))
       console.log(this.mensagem.number)
       //this.enviarMensagemTexto()
     }
@@ -79,6 +85,10 @@ export class EnviarMensagemVariosComponent implements OnInit {
       checkbox.checked = false
     }
     this.contatosAtivos.splice(0, this.contatosAtivos.length);
+  }
+
+  img(evt){
+    
   }
 
   
@@ -102,7 +112,7 @@ export class EnviarMensagemVariosComponent implements OnInit {
   }
 
   enviarImagem() {
-    this.mensagem.number = this.setFormatoNumero(this.contato.numero);
+    this.mensagem.number = this.ContatoFormatoService.setFormatoNumero(this.contato.numero);
     this.InstanceService.enviarImgBase64(this.mensagem, this.instance).subscribe({
       next: (response) => {
       },
@@ -110,21 +120,6 @@ export class EnviarMensagemVariosComponent implements OnInit {
         console.log("Erro ao enviar mensagem", err)
       }
     })
-  }
-
-
-
-  setFormatoNumero(destinatario: String) {
-    destinatario = destinatario.replaceAll(".", "");
-    destinatario = destinatario.replaceAll("-", "");
-    destinatario = destinatario.replaceAll("(", "");
-    destinatario = destinatario.replaceAll(")", "");
-    destinatario = destinatario.replaceAll(" ", "");
-    if (destinatario.length == 9) {
-      destinatario = "63" + destinatario
-    }
-    //this.mensagem.number = "55" + destinatario;
-    return ("55" + destinatario)
   }
 
   updateContatosAtivos(contatosAtivos: ContatoModel[]) {
@@ -138,5 +133,11 @@ export class EnviarMensagemVariosComponent implements OnInit {
       return true
     }
     else return false
+  }
+
+  gravarAudio() {
+    this.mensagem.number = this.ContatoFormatoService.setFormatoNumero(this.contato.numero);
+    this.AudioRecorderService.setAtributosEnvio(this.instance, this.mensagem)
+    this.AudioRecorderService.gravarAudio()
   }
 }

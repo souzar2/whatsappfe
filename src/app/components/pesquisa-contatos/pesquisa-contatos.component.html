@@ -19,6 +19,8 @@
     </nav>
 
     <div id="scroll-box" style="margin-bottom: 30px;">
+        <div *ngIf="clientesPaginados.length==0 && contatoPesquisa!=''">
+        <p>{{contatoPesquisa}} não foi encontrado(a)</p></div>
 
         <div onscroll="onScroll()" *ngFor="let cliente of clientesPaginados; index as i">
             <div (click)="selecionarContato(i)">

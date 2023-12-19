@@ -1,13 +1,14 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { InstanceModel } from 'src/app/models/instance.model';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { MessageModel } from 'src/app/models/message.model';
 import { InstanceService } from 'src/app/services/instance.service';
 import { ActivatedRoute } from '@angular/router';
 import { ContatoModel } from 'src/app/models/contato.model';
 import { ChatModel } from 'src/app/models/chat.model';
-import { DomSanitizer } from '@angular/platform-browser';
-
-declare var MediaRecorder: any;
+import { AudioRecorderService } from '../midia.service/audio.recorder.service';
+import { ContatoFormatoService } from 'src/app/services/functions/contato.formato.service';
+import { ModalEnviarImagemComponent } from 'src/app/modal/enviar-imagem/enviar-imagem.component';
+import { ModalService } from 'src/app/services/modal.service';
+import { InstanceModel } from 'src/app/models/instance.model';
 
 @Component({
   selector: 'app-enviar-mensagem-individual',
@@ -35,25 +36,31 @@ export class EnviarMensagemIndividualComponent {
 
   private imgBase64String: String = "";
 
-  constructor(private InstanceService: InstanceService, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef, private dom: DomSanitizer) {
-
+  constructor(private InstanceService: InstanceService, 
+    private AudioRecorderService: AudioRecorderService, 
+    private ContatoFormatoService: ContatoFormatoService,
+    private ModalService: ModalService) {
   }
 
   ngOnInit() {
     this.mensagem.start();
     this.chat = []
     this.showMessages();
-    this.audioConfig();
+    this.AudioRecorderService.audioConfig();
 
   }
 
-  receberInformacao(categoria) {
-    this.contato = categoria.contatosAtivos
+  enviar(){
+    if(this.mensagem.mediaMessage.media!=undefined){
+      this.enviarImagem()
+    }
+    else{
+      this.enviarMensagemTexto()
+    }
   }
-
 
   enviarMensagemTexto() {
-    this.mensagem.number = this.setFormatoNumero(this.contato.numero);
+    this.mensagem.number = this.ContatoFormatoService.setFormatoNumero(this.contato.numero);
     this.InstanceService.enviarText(this.mensagem, this.instance).subscribe({
       next: (response) => {
       },
@@ -63,21 +70,19 @@ export class EnviarMensagemIndividualComponent {
     })
     this.showMessages()
   }
-
-  enviarAudio() {
-    this.mensagem.number = this.setFormatoNumero(this.contato.numero);
-
-    this.InstanceService.enviarAudioBase64(this.mensagem, this.instance).subscribe({
+  
+  enviarImagem() {
+    this.mensagem.number = this.ContatoFormatoService.setFormatoNumero(this.contato.numero);
+    this.InstanceService.enviarImgBase64(this.mensagem, this.instance).subscribe({
       next: (response) => {
       },
-
       error: err => {
-        console.log("Erro ao enviar audio", err)
+        console.log("Erro ao enviar mensagem", err)
       }
     })
+    this.chat = []
     this.showMessages()
   }
-
 
   EscolherImg(evt) {
     var arquivoImagem = evt.target.files;
@@ -93,27 +98,17 @@ export class EnviarMensagemIndividualComponent {
   _handleReaderLoaded(readerEvt) {
     var binaryString = readerEvt.target.result;
     this.imgBase64String = btoa(binaryString);
-    console.log(this.imgBase64String);
 
     this.mensagem.mediaMessage.media = this.imgBase64String
     this.mensagem.mediaMessage.caption = "Envio de video"
-    this.enviarImagem()
+    console.log(this.mensagem.mediaMessage.media);
+    
+    //this.enviarImagem()
+    //this.showMessages()
   }
 
-  enviarImagem() {
-    this.mensagem.number = this.setFormatoNumero(this.contato.numero);
-    this.InstanceService.enviarImgBase64(this.mensagem, this.instance).subscribe({
-      next: (response) => {
-      },
-      error: err => {
-        console.log("Erro ao enviar mensagem", err)
-      }
-    })
-    this.chat = []
-    this.showMessages()
-  }
-
-
+  
+  
   /*
     enviarVariasMensagemTexto() {
       this.mensagem.number = this.setFormatoNumero(this.contato.numero);
@@ -125,20 +120,6 @@ export class EnviarMensagemIndividualComponent {
       }
       this.getMessages()
     }*/
-
-
-  setFormatoNumero(destinatario: String) {
-    destinatario = destinatario.replaceAll(".", "");
-    destinatario = destinatario.replaceAll("-", "");
-    destinatario = destinatario.replaceAll("(", "");
-    destinatario = destinatario.replaceAll(")", "");
-    destinatario = destinatario.replaceAll(" ", "");
-    if (destinatario.length == 9) {
-      destinatario = "63" + destinatario
-    }
-    //this.mensagem.number = "55" + destinatario;
-    return ("55" + destinatario)
-  }
 
   nenhumContatoSelecionado() {
     if (this.contato == undefined) {
@@ -156,14 +137,14 @@ export class EnviarMensagemIndividualComponent {
       error: err => {
         console.log("Erro ao criar WebHook", err)
       }
-    })
-  }*/
+    })}
+    */
 
 
   getMessages(): Promise<ChatModel[]> {
     return new Promise((resolve, reject) => {
       //console.log(this.instance);
-      this.InstanceService.getMensagens(this.instance).subscribe({
+      this.InstanceService.getMensagensBanco().subscribe({
         next: (response) => {
           resolve(response)
         },
@@ -196,7 +177,6 @@ export class EnviarMensagemIndividualComponent {
 
   getMidia(id: string): string | undefined {
     if(Object.keys(this.imgsChat).includes(id)) {
-      
       return this.imgsChat[id].base64;
     } else {
       return undefined;
@@ -205,101 +185,31 @@ export class EnviarMensagemIndividualComponent {
 
    separaFromMe() {
     for (let i = 0; i < this.chat.length; i++) {
-      if (this.chat.at(i).remoteJid == this.tratarNumero(this.contato.numero) + "@s.whatsapp.net") {
+      if (this.chat.at(i).remoteJid == this.ContatoFormatoService.tratarNumero(this.contato.numero) + "@s.whatsapp.net") {
+        console.log(this.chat.at(i));
         this.chatSelecionado.push(this.chat.at(i))
       }
     }
     this.chatSelecionado.forEach(item => {
       if (item.messageType == "stickerMessage" || item.messageType == "imageMessage" || item.messageType == "audioMessage") {
         this.getImagemBase64FromId(item)
-        //item.midia = this.imgsChat['item.id']['base64'] 
-        //console.log(item.midia);
-        //console.log(item.midia);
       }
-      if (item.pushName == "") {
-        item.messageTimestamp = item.messageTimestamp.low
-      }
-      item.messageTimestamp = new Date(item.messageTimestamp * 1000)
+      item.messageTimestamp = new Date(item.messageTimestamp)
     })
   }
 
-  tratarNumero(num: string) {
-    if (num.length == 11 && num.startsWith("639")) {
-      return num.replace("639", "5563")
-    }
-    else {
-      if (num.length == 13 && num.startsWith("55639")) {
-        return num.replace("55639", "5563")
-      }
-
-      else {
-        return ("55" + num)
-      }
-    }
-  }
-
-
-  audioConfig() {
-    var nav = <any>navigator;
-
-    nav.getUserMedia(
-      { audio: true },
-      gravacao => {
-
-        console.log(gravacao);
-        this.gravadorMidia = new MediaRecorder(gravacao);
-
-        this.gravadorMidia.onstop = e => {
-          var blob = new Blob(this.chunks, { type: 'audio/ogg; codecs=opus' });
-
-          var lerDado = new FileReader();
-          lerDado.readAsDataURL(blob);
-
-          lerDado.onloadend = () => {
-            const base64data = lerDado.result;
-            console.log(base64data);
-            this.mensagem.audioBase64 =(base64data as string).replaceAll("data:audio/ogg; codecs=opus;base64,", "");
-
-            console.log(this.mensagem.audioBase64);
-            this.enviarAudio();
-          }
-
-    
-          //this.enviarAudio()
-          
-          this.chunks = [];
-          var audioURL = URL.createObjectURL(blob);
-          // audio.src = audioURL;
-          this.audioFiles.push(this.dom.bypassSecurityTrustUrl(audioURL));
-          console.log(audioURL);
-          this.cd.detectChanges();
-        };
-
-        this.gravadorMidia.ondataavailable = e => {
-          this.chunks.push(e.data);
-        };
-      },
-      () => {
-        alert('Error capturing audio.');
-      },
-    );
-
-  }
-
   gravarAudio() {
-    if (this.gravadorMidia.state == "recording") {
-      this.gravadorMidia.stop();
-      console.log('recorder stopped');
-      //this.getAudioB64(this.chunks)
-      //console.log(aud);
-      
+    this.mensagem.number = this.ContatoFormatoService.setFormatoNumero(this.contato.numero);
+    this.AudioRecorderService.setAtributosEnvio(this.instance, this.mensagem)
+    this.AudioRecorderService.gravarAudio()
+  }
 
+  gravando(){
+    if(this.AudioRecorderService.gravadorMidia.state == "recording"){
+      return true;
     }
-
-    else {
-      this.gravadorMidia.start();
-      console.log(this.gravadorMidia.state);
-      console.log('recorder started');
+    else{
+      return false;
     }
   }
 }

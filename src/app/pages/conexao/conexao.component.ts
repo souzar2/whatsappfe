@@ -25,12 +25,14 @@ export class ConexaoComponent implements OnInit {
     }).result.then(response  =>{
       this.listarInstancias();
     }).catch(()=>{})
-    
   }
 
+  
+
+  
+
   redirecionarMensagem(i: number){
-    console.log(this.instances[i].instance.instanceName);
-    
+    console.log(this.instances[i].instance.instanceName); 
     this.router.navigate(['enviar-mensagem', this.instances[i].instance.instanceName])
   }
 
@@ -83,8 +85,5 @@ export class ConexaoComponent implements OnInit {
         this.isLoading = false;
       }
     })* */
-
-  
-
 
 }

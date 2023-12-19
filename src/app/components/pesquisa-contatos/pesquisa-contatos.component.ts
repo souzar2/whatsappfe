@@ -2,6 +2,7 @@ import { Component, ViewChild, Input, Output, EventEmitter } from '@angular/core
 import { ActivatedRoute } from '@angular/router';
 import { ContatoModel } from 'src/app/models/contato.model';
 import { ClienteService } from 'src/app/services/clientes.service';
+import { ContatoFormatoService } from 'src/app/services/functions/contato.formato.service';
 
 @Component({
   selector: 'app-pesquisa-contatos',
@@ -25,7 +26,9 @@ export class PesquisaContatosComponent {
   @Output() contatosAtivosChange = new EventEmitter<ContatoModel[]>();
 
 
-  constructor(private clienteService: ClienteService, private activatedRoute: ActivatedRoute) {}
+  constructor(private clienteService: ClienteService, 
+    private activatedRoute: ActivatedRoute,
+    private ContatoFormatoService: ContatoFormatoService) {}
 
   ngOnInit() {
   }
@@ -35,8 +38,8 @@ export class PesquisaContatosComponent {
   }*/
 
   async onValorChange() {
+    this.pagina=1
     this.clientesPaginados = await this.getClientes(25, this.contatoPesquisa)
-    this.pagina=0
   }
 
   /*
@@ -114,16 +117,15 @@ export class PesquisaContatosComponent {
   }
 
   async onBottomAlcancado(){
+    if(this.contatoPesquisa==""){
     let novosClientes: Array<ContatoModel> = new Array();
-    
     novosClientes = await this.getClientes(25, this.contatoPesquisa)
 
     for (let i=0;i<novosClientes.length;i++){
        this.clientesPaginados.push(novosClientes.at(i))
     }
    
-    this.pagina+=1;
-    
+    this.pagina+=1;}
   }
 
   numeroSelecionado(contato: ContatoModel): boolean {
@@ -138,54 +140,10 @@ export class PesquisaContatosComponent {
   }
 
   mascaraNumero(telefone: string) {
-
-    telefone = telefone.replaceAll(".", "");
-    telefone = telefone.replaceAll("-", "");
-    telefone = telefone.replaceAll("(", "");
-    telefone = telefone.replaceAll(")", "");
-    telefone = telefone.replaceAll(" ", "");
-
-    if (telefone.length <= 9) {
-      telefone = telefone.substring(0, telefone.length - 4) + "-" + telefone.substring(telefone.length - 4, telefone.length)
-      return "(63)" + telefone
-    } else {
-      if (telefone.length == 11) {
-        telefone = telefone.substring(0, telefone.length - 4) + "-" + telefone.substring(telefone.length - 4, telefone.length)
-
-        return "(" + telefone.substring(0, 2) + ")" + telefone.substring(2, telefone.length)
-
-      }
-      else {
-        if (telefone.length == 10) {
-          telefone = "(" + telefone.substring(0, 2) + ")" + telefone.substring(2, telefone.length)
-          telefone = telefone.substring(0, telefone.length - 4) + "-" + telefone.substring(telefone.length - 4, telefone.length)
-          return telefone
-        }
-      }
-      return telefone
-    }
+    return this.ContatoFormatoService.mascaraNumero(telefone);
   }
 
   mascaraNome(nomeContato: string) {
-    nomeContato = nomeContato.replaceAll(" DO ", " ");
-    nomeContato = nomeContato.replaceAll(" DA ", " ");
-    nomeContato = nomeContato.replaceAll(" DE ", " ");
-    nomeContato = nomeContato.replaceAll(" E ", " ");
-    nomeContato = nomeContato.replaceAll(" DOS ", " ");
-    nomeContato = nomeContato.replaceAll(" DAS ", " ");
-
-    if (nomeContato.length >= 40) {
-      nomeContato = nomeContato.substring(0, nomeContato.lastIndexOf(" "))
-      nomeContato = nomeContato.substring(0, nomeContato.lastIndexOf(" "))
-      nomeContato = nomeContato.substring(0, nomeContato.lastIndexOf(" "))
-      return nomeContato
-    } else {
-      if (nomeContato.length >= 28) {
-        nomeContato = nomeContato.substring(0, nomeContato.lastIndexOf(" "))
-        nomeContato = nomeContato.substring(0, nomeContato.lastIndexOf(" "))
-        return nomeContato
-      }
-    }
-    return nomeContato
+    return this.ContatoFormatoService.mascaraNome(nomeContato)
   }
 }

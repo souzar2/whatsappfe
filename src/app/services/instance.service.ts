@@ -17,8 +17,8 @@ export class InstanceService {
     ) { }
   
   listarIntancias() : Observable<any>{
-    console.log(this.auth.getHeaders());
     
+    console.log(this.auth.getHeaders());
     return this.http.get(`${enviroment.apiUrl}fetchInstances/`, { headers: this.auth.getHeaders()});
   }
   novaInstancia(instancia: InstanceModel) : Observable<any>{
@@ -50,6 +50,10 @@ export class InstanceService {
 
   setWebHook(instancia: string) : Observable<any>{
     return this.http.post(`${enviroment.apiUrl}setwebhook/${instancia}`, {}, { headers: this.auth.getHeaders()});
+  }
+
+  getMensagensBanco() : Observable<any>{
+    return this.http.get(`${enviroment.apiUrl}getSavedMessages`, { headers: this.auth.getHeaders()});
   }
 
   getMensagens(instancia: string) : Observable<any>{

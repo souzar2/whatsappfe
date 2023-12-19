@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { UsuarioModel } from 'src/app/models/usuario.model';
 import { AuthService } from 'src/app/services/authorization/auth.service';
+import { InstanceService } from 'src/app/services/instance.service';
 import { UserService } from 'src/app/services/user.service';
+
 
 @Component({
   selector: 'app-login',
@@ -12,13 +14,14 @@ export class LoginComponent {
   usuario: UsuarioModel = new UsuarioModel();
   login: Array<any> = new Array();
   token: string
+  instance: string
 
-  constructor(private UserService: UserService, private AuthService: AuthService) {
+  constructor(private UserService: UserService, private AuthService: AuthService, private InstanceService: InstanceService) {
 
   }
 
   ngOnInit() {
-
+   
   }
 
   entrar() {
@@ -36,7 +39,6 @@ export class LoginComponent {
 isAuthenticated(){
   return this.AuthService.isAuthenticated();
 }
-
 
 }
 

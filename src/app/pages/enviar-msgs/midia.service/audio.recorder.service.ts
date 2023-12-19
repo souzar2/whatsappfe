@@ -1,21 +1,26 @@
 
-import { OnInit, ChangeDetectorRef } from '@angular/core';
-import { Injectable } from '@angular/core';
+import { OnInit, Injectable  } from '@angular/core';
+import { InstanceService } from 'src/app/services/instance.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { MessageModel } from 'src/app/models/message.model';
+
+declare var MediaRecorder: any;
 
 @Injectable({
     providedIn: 'root'
 })
+
 export class AudioRecorderService {
+
+    mensagem: MessageModel;
+    instancia: string;
 
     gravadorMidia: any;
     chunks = [];
     audioFiles = [];
     audioBase64: any;
 
-    constructor(private cd: ChangeDetectorRef, private dom: DomSanitizer) { 
-
-    }
+    constructor(private InstanceService: InstanceService, private dom: DomSanitizer) {  }
     
     audioConfig() {
         var nav = <any>navigator;
@@ -33,20 +38,24 @@ export class AudioRecorderService {
 
                     lerDado.onloadend = () => {
                         const base64data = lerDado.result;
+                        
                         console.log(base64data);
+                        this.mensagem.audioBase64 = (base64data as string).replaceAll("data:audio/ogg; codecs=opus;base64,", "");
+                        
+                        this.enviarAudio()
+                        
                     }
                     this.chunks = [];
                     var audioURL = URL.createObjectURL(blob);
                     this.audioFiles.push(this.dom.bypassSecurityTrustUrl(audioURL));
                     console.log(audioURL);
-                    this.cd.detectChanges();
                 };
                 this.gravadorMidia.ondataavailable = e => {
                     this.chunks.push(e.data);
                 };
             },
             () => {
-                alert('Error capturing audio.');
+                alert('Sem parmissão para utilizar o microfone.');
             },
         );
 
@@ -64,4 +73,18 @@ export class AudioRecorderService {
         }
     }
 
+    setAtributosEnvio(instancia: string, mensagem: MessageModel){
+        this.mensagem = mensagem
+        this.instancia = instancia
+    }
+
+    enviarAudio() {
+        this.InstanceService.enviarAudioBase64(this.mensagem, this.instancia).subscribe({
+          next: (response) => {
+          },
+          error: err => {
+            console.log("Erro ao enviar audio", err)
+          }
+        })
+      }
 }

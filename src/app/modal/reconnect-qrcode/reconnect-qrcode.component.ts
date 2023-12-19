@@ -30,6 +30,9 @@ export class ReconnectQrcodeComponent {
       next: (response) => {
         this.qrcode = response.base64
         console.log(this.qrcode)
+        if(this.instance.status=="open"){
+          this.modalRef.close
+        }
         this.isLoading = false;
       },
       error: err => {
