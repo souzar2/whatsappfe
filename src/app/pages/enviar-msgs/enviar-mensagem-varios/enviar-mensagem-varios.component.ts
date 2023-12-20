@@ -87,10 +87,6 @@ export class EnviarMensagemVariosComponent implements OnInit {
     this.contatosAtivos.splice(0, this.contatosAtivos.length);
   }
 
-  img(evt){
-    
-  }
-
   
   EscolherImg(evt) {
     var arquivoImagem = evt.target.files;

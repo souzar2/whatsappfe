@@ -52,8 +52,10 @@ export class InstanceService {
     return this.http.post(`${enviroment.apiUrl}setwebhook/${instancia}`, {}, { headers: this.auth.getHeaders()});
   }
 
-  getMensagensBanco() : Observable<any>{
-    return this.http.get(`${enviroment.apiUrl}getSavedMessages`, { headers: this.auth.getHeaders()});
+  getMensagensBanco(numero: string, timestampMaisRecente: string) : Observable<any>{
+    //console.log(numero); { headers: this.auth.getHeaders(), "page": page,
+    //console.log(this.auth.getHeaders());
+    return this.http.post(`http://localhost:3000/getSavedMessages`, { headers: this.auth.getHeaders(), "numero": numero,"timestampMaisRecente": timestampMaisRecente});
   }
 
   getMensagens(instancia: string) : Observable<any>{

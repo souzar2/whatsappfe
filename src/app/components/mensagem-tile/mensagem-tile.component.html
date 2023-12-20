@@ -41,7 +41,7 @@
 </ng-template>
 
 <ng-template #midiaSticker>
-    <ng-container *ngIf="msg.messageType == 'stickerMessage'">
+    <ng-container *ngIf="msg.messageType == 'stickerMessage' else midiaLocation">
         <div *ngIf="msg.messageType == 'stickerMessage'">
             <i style="margin-right: 12px; font-size: 20px;" class="bi bi-file-earmark-arrow-down-fill"></i>
             <img  style="height: auto; width: 100px;"
@@ -52,12 +52,23 @@
 </ng-template>
 
 <ng-template #midiaLocation>
-    <ng-container *ngIf="msg.messageType == 'LocationMessage'">
+    <ng-container *ngIf="msg.messageType == 'LocationMessage' else midiaVideo">
         <div *ngIf="msg.messageType == 'LocationMessage'">
             <i style="margin-right: 12px; font-size: 20px;" class="bi bi-file-earmark-arrow-down-fill"></i>
             <img  style="height: auto; width: 100px;"
             [src]="'data:image/jpg;base64,' + midia"
             alt="imgs"/>
+        </div>
+    </ng-container>
+</ng-template>
+
+<ng-template #midiaVideo>
+    <ng-container *ngIf="msg.messageType == 'videoMessage'">
+        <div *ngIf="msg.messageType == 'videoMessage'">
+            <video width="320" height="240" controls>
+                <source [src]="'data:video/mp4;base64,' + midia" type="video/mp4">
+              Your browser does not support the video tag.
+              </video>
         </div>
     </ng-container>
 </ng-template>

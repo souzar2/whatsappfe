@@ -1,5 +1,5 @@
 <div class="msgsEnvRec">
-    <div *ngFor="let msg of chatSelecionado; index as i">
+    <div *ngFor="let msg of chat; index as i">
         <div class="d-flex" [ngClass]="msg.fromMe? 'justify-content-end' : undefined">
             <app-mensagem-tile class="msg" [msg]="msg" [midia]="getMidia(msg.id)"
                 [enviada]="msg.fromMe"></app-mensagem-tile>

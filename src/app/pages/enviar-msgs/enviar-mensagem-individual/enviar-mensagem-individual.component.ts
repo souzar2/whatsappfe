@@ -9,6 +9,8 @@ import { ContatoFormatoService } from 'src/app/services/functions/contato.format
 import { ModalEnviarImagemComponent } from 'src/app/modal/enviar-imagem/enviar-imagem.component';
 import { ModalService } from 'src/app/services/modal.service';
 import { InstanceModel } from 'src/app/models/instance.model';
+import { Timestamp, interval } from 'rxjs';
+
 
 @Component({
   selector: 'app-enviar-mensagem-individual',
@@ -49,6 +51,7 @@ export class EnviarMensagemIndividualComponent {
     this.AudioRecorderService.audioConfig();
 
   }
+
 
   enviar(){
     if(this.mensagem.mediaMessage.media!=undefined){
@@ -141,10 +144,10 @@ export class EnviarMensagemIndividualComponent {
     */
 
 
-  getMessages(): Promise<ChatModel[]> {
+  getMessages(timestampRecente: string): Promise<ChatModel[]> {
     return new Promise((resolve, reject) => {
       //console.log(this.instance);
-      this.InstanceService.getMensagensBanco().subscribe({
+      this.InstanceService.getMensagensBanco(this.ContatoFormatoService.tratarNumero(this.contato.numero), timestampRecente).subscribe({
         next: (response) => {
           resolve(response)
         },
@@ -155,13 +158,26 @@ export class EnviarMensagemIndividualComponent {
     });
   }
 
+  
   async showMessages() {
-    this.chat = await this.getMessages();
+    this.chat = await this.getMessages(undefined);
+    console.log(this.chat.at(0).messageTimestamp)
+    var timestampMaisRecente = this.chat.at(0).messageTimestamp;
+    this.downloadMidia();
 
-    this.separaFromMe();
-    /*
-        this.chat.sort((a, b) => a.messageTimestamp - b.messageTimestamp);
-        console.log(this.chat);*/
+    interval(3000).subscribe(async x => {
+      console.log(timestampMaisRecente);
+      var novasMensagens: ChatModel[] = await this.getMessages(timestampMaisRecente);
+      
+      novasMensagens.forEach((item) => console.log("noovas", item.messageTimestamp));
+      
+      this.chat = novasMensagens.concat(this.chat);
+
+      timestampMaisRecente = this.chat.at(0).messageTimestamp;
+      
+      this.downloadMidia();/**/
+      
+    });
   }
 
   getImagemBase64FromId(msg: ChatModel) {
@@ -177,21 +193,22 @@ export class EnviarMensagemIndividualComponent {
 
   getMidia(id: string): string | undefined {
     if(Object.keys(this.imgsChat).includes(id)) {
+      
       return this.imgsChat[id].base64;
     } else {
       return undefined;
     }
   }
 
-   separaFromMe() {
-    for (let i = 0; i < this.chat.length; i++) {
+   downloadMidia() {
+    /*for (let i = 0; i < this.chat.length; i++) {
       if (this.chat.at(i).remoteJid == this.ContatoFormatoService.tratarNumero(this.contato.numero) + "@s.whatsapp.net") {
         console.log(this.chat.at(i));
         this.chatSelecionado.push(this.chat.at(i))
       }
-    }
-    this.chatSelecionado.forEach(item => {
-      if (item.messageType == "stickerMessage" || item.messageType == "imageMessage" || item.messageType == "audioMessage") {
+    }*/
+    this.chat.forEach(item => {
+      if (item.messageType == "stickerMessage" || item.messageType == "imageMessage" || item.messageType == "audioMessage"|| item.messageType == "videoMessage") {
         this.getImagemBase64FromId(item)
       }
       item.messageTimestamp = new Date(item.messageTimestamp)

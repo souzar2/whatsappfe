@@ -1,7 +1,14 @@
 
         
         <div class="msgsEnvRec">
-            <p>Mensagem para Vários Contatos</p>
+          
+            <h4>Mensagem para Vários Contatos</h4>
+            <h6>Selecionados:</h6>
+            <ul class="list-group list-group-flush">
+                <div *ngFor="let contato of contatosAtivos">
+                <li class="list-group-item">{{contato.nome}}</li>
+            </div>
+              </ul>
             <div *ngFor="let msgs of msgsEnviadas; index as i" class="msgEnviada darker">
                 <p>{{msgsEnviadas.at(i)}}</p>
                 <span class="time-right">11:01</span>

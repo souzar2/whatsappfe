@@ -3,7 +3,7 @@
         <form class="form-inline">
             <textarea class="form-control pesquisaArea"
                 oninput='if(this.scrollHeight > this.offsetHeight) this.rows += 1' type="text" name="mensagem"
-                [(ngModel)]="contatoPesquisa" type="search" placeholder="Pesquisa" aria-label="Search"
+                [(ngModel)]="contatoPesquisa" type="search" placeholder="Pesquisar por nome ou número" aria-label="Pesquisa"
                 id="pesquisaContatos" (input)="onValorChange()"></textarea>
         </form>
         <div class="form-check form-switch">

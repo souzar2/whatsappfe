@@ -9,7 +9,7 @@ export class ChatModel {
     messageType: string | undefined;
     messageTimestamp: any | undefined;
     thumb: string | undefined;
-    //midia: string | undefined;
+    midia: string | undefined;
     
     constructor() {}
 
